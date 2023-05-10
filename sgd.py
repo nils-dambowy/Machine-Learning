@@ -24,7 +24,7 @@ X_test['Price'] = list(y_test)
 
 print(X_train.head())
 
-def sgd_regressor(X, y, learning_rate=0.1, n_epochs=1000, k=20):
+def sgd_regressor(X, y, learning_rate=0.1, n_epochs=1000, k=15):
 
     w = np.random.randn(1,8)  # Randomly initializing weights
     b = np.random.randn(1,1)  # Random intercept value 
@@ -48,10 +48,12 @@ def sgd_regressor(X, y, learning_rate=0.1, n_epochs=1000, k=20):
         y_pred = []
         
         for i in range(k):
-            #y_pred = w*X + b
+            # predict price for every batch
+            #derivatives of the loss functions
             Lw = (-2/k * X_tr[i]) * (y_tr[i] - np.dot(X_tr[i],w.T) - b)
             Lb = (-2/k) * (y_tr[i] - np.dot(X_tr[i],w.T) - b)
 
+            # update parameters
             w = w - learning_rate * Lw
             b = b - learning_rate * Lb
             
@@ -62,8 +64,7 @@ def sgd_regressor(X, y, learning_rate=0.1, n_epochs=1000, k=20):
             
         print("Epoch: %d, Loss: %.3f" %(epoch, loss))
         epoch+=1
-        learning_rate = learning_rate/1.02
-        
+        learning_rate = learning_rate/1.02        
     return w,b
 
 def predict(x,w,b):
@@ -74,7 +75,6 @@ def predict(x,w,b):
         y = np.ndarray.item((np.dot(w,X_test[i])+b))
         y_pred.append(y)
     return np.array(y_pred)
-
 
 w,b = sgd_regressor(X_train,y_train)
 y_pred_customsgd = predict(X_test,w,b)

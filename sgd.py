@@ -1,4 +1,4 @@
-from sklearn.datasets import load_boston
+from sklearn.datasets import fetch_california_housing
 from sklearn import preprocessing
 import pandas as pd
 import numpy as np
@@ -7,8 +7,8 @@ from sklearn import preprocessing
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
-X = load_boston().data
-Y = load_boston().target
+X = fetch_california_housing().data
+Y = fetch_california_housing().target
 
 # split the data set into train and test
 X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
@@ -17,18 +17,16 @@ scaler = preprocessing.StandardScaler()
 X_train = scaler.fit_transform(X_train)
 X_test = scaler.transform(X_test)
 
-X_train = pd.DataFrame(data = X_train, columns=load_boston().feature_names)
+X_train = pd.DataFrame(data = X_train, columns=fetch_california_housing().feature_names)
 X_train['Price'] = list(y_train)  
-X_test = pd.DataFrame(data = X_test, columns=load_boston().feature_names)
+X_test = pd.DataFrame(data = X_test, columns=fetch_california_housing().feature_names)
 X_test['Price'] = list(y_test)
 
 print(X_train.head())
 
-def sgd_regressor(X, y, learning_rate=0.2, n_epochs=1000, k=40):
+def sgd_regressor(X, y, learning_rate=0.1, n_epochs=1000, k=20):
 
-    # y = m*X + b
-    # parameters
-    w = np.random.randn(1,13)  # Randomly initializing weights
+    w = np.random.randn(1,8)  # Randomly initializing weights
     b = np.random.randn(1,1)  # Random intercept value 
     epoch=1
     
@@ -38,7 +36,7 @@ def sgd_regressor(X, y, learning_rate=0.2, n_epochs=1000, k=40):
         temp = X.sample(k)
 
         # first 13 rows = features
-        X_tr = temp.iloc[:,0:13].values
+        X_tr = temp.iloc[:,0:8].values
         
         # last row = price
         y_tr = temp.iloc[:,-1].values
@@ -50,12 +48,9 @@ def sgd_regressor(X, y, learning_rate=0.2, n_epochs=1000, k=40):
         y_pred = []
         
         for i in range(k):
-            y_pred = w*X + b
-            #Lw = (-2/k * X_tr[i]) * (y_tr[i] - np.dot(X_tr[i],w.T) - b)
-            #Lb = (-2/k) * (y_tr[i] - np.dot(X_tr[i],w.T) - b)
-
-            Lb = (1/k) * sum(np.dot(w.T- y_tr[i])
-
+            #y_pred = w*X + b
+            Lw = (-2/k * X_tr[i]) * (y_tr[i] - np.dot(X_tr[i],w.T) - b)
+            Lb = (-2/k) * (y_tr[i] - np.dot(X_tr[i],w.T) - b)
 
             w = w - learning_rate * Lw
             b = b - learning_rate * Lb
@@ -75,7 +70,7 @@ def predict(x,w,b):
     y_pred=[]
     for i in range(len(x)):
         temp_ = x
-        X_test = temp_.iloc[:,0:13].values
+        X_test = temp_.iloc[:,0:8].values
         y = np.ndarray.item((np.dot(w,X_test[i])+b))
         y_pred.append(y)
     return np.array(y_pred)

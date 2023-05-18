@@ -13,8 +13,9 @@ Y = fetch_california_housing().target
 # split the data set into train and test
 X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
 
+# standardize the dataset
 scaler = preprocessing.StandardScaler()
-X_train = scaler.fit_transform(X_train)
+X_train = scaler.fit_transform(X_train) 
 X_test = scaler.transform(X_test)
 
 X_train = pd.DataFrame(data = X_train, columns=fetch_california_housing().feature_names)
@@ -22,10 +23,14 @@ X_train['Price'] = list(y_train)
 X_test = pd.DataFrame(data = X_test, columns=fetch_california_housing().feature_names)
 X_test['Price'] = list(y_test)
 
-print(X_train.head())
-
-def sgd_regressor(X, y, learning_rate=0.1, n_epochs=1000, k=15):
-
+def sgd_regressor(X, y, learning_rate=0.1, n_epochs=1500, k=12):
+    """
+    X: data of training set
+    y: target values of the training set
+    learning_rate: learning rate
+    n_epochs: amount of
+    k: Batch size
+    """ 
     w = np.random.randn(1,8)  # Randomly initializing weights
     b = np.random.randn(1,1)  # Random intercept value 
     epoch=1
@@ -49,7 +54,7 @@ def sgd_regressor(X, y, learning_rate=0.1, n_epochs=1000, k=15):
         
         for i in range(k):
             # predict price for every batch
-            #derivatives of the loss functions
+            # derivatives of the loss functions
             Lw = (-2/k * X_tr[i]) * (y_tr[i] - np.dot(X_tr[i],w.T) - b)
             Lb = (-2/k) * (y_tr[i] - np.dot(X_tr[i],w.T) - b)
 

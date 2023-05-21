@@ -22,7 +22,7 @@ X_test = scaler.transform(X_test)
 
 X_train = pd.DataFrame(data = X_train, columns=fetch_california_housing().feature_names)
 X_train['Price'] = list(y_train)  
-X_test = pd.DataFrame(data = X_test, co:lumns=fetch_california_housing().feature_names)
+X_test = pd.DataFrame(data = X_test, columns=fetch_california_housing().feature_names)
 X_test['Price'] = list(y_test)
 
 def sgd_regressor(X, y, learning_rate=0.1, n_epochs=1500, k=12):
@@ -44,31 +44,31 @@ def sgd_regressor(X, y, learning_rate=0.1, n_epochs=1500, k=12):
 
         # first 13 rows = features
         X_tr = temp.iloc[:,0:8].values
-        
+         
         # last row = price
         y_tr = temp.iloc[:,-1].values
-
+        
         Lw = w
         Lb = b
         
         loss = 0
         y_pred = []
         
+        # for every set of features in the batch
         for i in range(k):
-            # predict price for every batch
-            # derivatives of the loss functions
+            # calculate parameter vector for every row in the batch
             Lw = (-2/k * X_tr[i]) * (y_tr[i] - np.dot(X_tr[i],w.T) - b)
             Lb = (-2/k) * (y_tr[i] - np.dot(X_tr[i],w.T) - b)
 
-            # update parameters
+            # update parameter vector
             w = w - learning_rate * Lw
             b = b - learning_rate * Lb
             
+            # use calculated parameters to predict price
             y_predicted = np.dot(X_tr[i],w.T)
             y_pred.append(y_predicted)
-        
-        loss = mean_squared_error(y_pred, y_tr)
-            
+
+        loss = mean_squared_error(y_pred, y_tr)   
         print("Epoch: %d, Loss: %.3f" %(epoch, loss))
         epoch+=1
         learning_rate = learning_rate/1.02        

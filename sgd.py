@@ -7,10 +7,12 @@ from sklearn import preprocessing
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 
+# load the dataset
 X = fetch_california_housing().data
 Y = fetch_california_housing().target
 
 # split the data set into train and test
+# X = features, y = target value
 X_train, X_test, y_train, y_test = train_test_split(X, Y, test_size=0.3, random_state=0)
 
 # standardize the dataset
@@ -20,7 +22,7 @@ X_test = scaler.transform(X_test)
 
 X_train = pd.DataFrame(data = X_train, columns=fetch_california_housing().feature_names)
 X_train['Price'] = list(y_train)  
-X_test = pd.DataFrame(data = X_test, columns=fetch_california_housing().feature_names)
+X_test = pd.DataFrame(data = X_test, co:lumns=fetch_california_housing().feature_names)
 X_test['Price'] = list(y_test)
 
 def sgd_regressor(X, y, learning_rate=0.1, n_epochs=1500, k=12):
@@ -28,7 +30,7 @@ def sgd_regressor(X, y, learning_rate=0.1, n_epochs=1500, k=12):
     X: data of training set
     y: target values of the training set
     learning_rate: learning rate
-    n_epochs: amount of
+    n_epochs: amount of epochs
     k: Batch size
     """ 
     w = np.random.randn(1,8)  # Randomly initializing weights

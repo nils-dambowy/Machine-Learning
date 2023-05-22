@@ -82,13 +82,16 @@ def predict(x,w,b):
         y = np.ndarray.item((np.dot(w,X_test[i])+b))
         y_pred.append(y)
     return np.array(y_pred)
+def main():
+    w,b = sgd_regressor(X_train,y_train)
+    y_pred_customsgd = predict(X_test,w,b)
 
-w,b = sgd_regressor(X_train,y_train)
-y_pred_customsgd = predict(X_test,w,b)
+    plt.figure(figsize=(25,6))
+    plt.plot(y_test, label='Actual')
+    plt.plot(y_pred_customsgd, label='Predicted')
+    plt.legend(prop={'size': 16})
+    plt.show()
+    print('Mean Squared Error :',mean_squared_error(y_test, y_pred_customsgd))
 
-plt.figure(figsize=(25,6))
-plt.plot(y_test, label='Actual')
-plt.plot(y_pred_customsgd, label='Predicted')
-plt.legend(prop={'size': 16})
-plt.show()
-print('Mean Squared Error :',mean_squared_error(y_test, y_pred_customsgd))
+if __name__ == "__main__":
+   main()
